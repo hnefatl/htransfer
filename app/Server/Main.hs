@@ -1,13 +1,13 @@
 module Main where
 
 import System.Environment
-import Arguments
+import Control.Monad.Catch
 
-import NetUtil
+import Arguments
+import Server
 
 main :: IO ()
-main = do
+main = handleAll (print . displayException) $ do
         args <- getArgs
-        case parseArgs args of
-            Left err -> print err
-            Right resources -> runServer resources
+        resources <- parseArgs args
+        runServer "0.0.0.0" "34652" resources
